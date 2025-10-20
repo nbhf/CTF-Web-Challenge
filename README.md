@@ -2,7 +2,8 @@
 
 ## Challenge Overview
 **Target**: `http://15.237.112.58:8087/`
-**Category**: Identify and exploit the vulnerability to retrieve the flag, then submit a comprehensive report.
+**Category**: Web application security challenge
+**Task**: Identify and exploit the vulnerability to retrieve the flag, then submit a comprehensive report.
 
 ## Challenge Description
 A web application with a Single page returning "wrong !" was found to be vulnerable to SQL injection. The challenge requires extracting a hidden flag from the database by exploiting the authentication mechanism.
